@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: deals_bigdata
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/source:/source:ro
+      - ./docker/postgres/init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d deals_bigdata"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: deals_bigdata
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: python -m etl.run
+    restart: "no"
+
+volumes:
+  postgres_data:
