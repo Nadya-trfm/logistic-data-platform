@@ -1,4 +1,3 @@
-"""Configuration: everything comes from environment variables (see .env.example)."""
 from __future__ import annotations
 
 import os

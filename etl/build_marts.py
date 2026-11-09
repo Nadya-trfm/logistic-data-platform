@@ -1,4 +1,3 @@
-"""Stage 2: rebuild the analytical mart (idempotent full rebuild inside one transaction)."""
 from __future__ import annotations
 
 import logging

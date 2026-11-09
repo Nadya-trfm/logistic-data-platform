@@ -1,6 +1,4 @@
-"""CLI.  python -m etl.run_pipeline {init|etl|marts|all} [--start-date D --end-date D --as-of D]
 
-Re-running with the same arguments is safe: every step rewrites its target atomically."""
 from __future__ import annotations
 
 import argparse
